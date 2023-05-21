@@ -1,8 +1,8 @@
-package main
+package test
 
 import (
+	"bytes"
 	"fmt"
-	"io/ioutil"
 	"os"
 	"regexp"
 	"strconv"
@@ -35,7 +35,7 @@ func main() {
 }
 
 func readTextFromFile(filename string) (string, error) {
-	data, err := ioutil.ReadFile(filename)
+	data, err := os.ReadFile(filename)
 	if err != nil {
 		return "", err
 	}
@@ -43,10 +43,14 @@ func readTextFromFile(filename string) (string, error) {
 }
 
 func writeTextToFile(text, filename string) error {
-	return ioutil.WriteFile(filename, []byte(text), 0644)
+	return os.WriteFile(filename, []byte(text), 0644)
 }
 
 func processText(text string) string {
+
+	// Replace 'a' with 'an' if the next word starts with a vowel or 'h'
+	text = replaceAToAn(text)
+
 	// Replace (hex) with decimal version of the preceding word
 	text = replaceHexNumbers(text)
 
@@ -62,20 +66,14 @@ func processText(text string) string {
 	// Capitalize the preceding word if (cap) is found
 	text = convertToCapitalized(text)
 
-	// Format punctuations with preceding and following words
-	text = formatPunctuations(text)
-
-	// Format the ' marks with the corresponding words
-	text = formatQuotationMarks(text)
-
-	// Replace 'a' with 'an' if the next word starts with a vowel or 'h'
-	text = replaceAToAn(text)
-
 	// Remove the marker tags from the text
 	text = removeMarkers(text)
 
-	// Normalize spacing between words
-	text = normalizeSpacing(text)
+	// Format punctuations with preceding and following words
+	text = formatPunctuation(text)
+
+	// Format the ' marks with the corresponding words
+	text = formatQuotationMarks(text)
 
 	return text
 }
@@ -99,115 +97,143 @@ func replaceBinaryNumbers(text string) string {
 }
 
 func convertToUppercase(text string) string {
-	re := regexp.MustCompile(`(\w+) \(up(?:, (\d+))?\)`)
+	re := regexp.MustCompile(`((?:\w+ ){0,}\w+) \(up(?:, (\d+))?\)`)
 	return re.ReplaceAllStringFunc(text, func(match string) string {
 		submatches := re.FindStringSubmatch(match)
-		word := submatches[1]
+		wordsMatch := submatches[1]
 		count := submatches[2]
 
+		words := strings.Fields(wordsMatch)
+
 		if count == "" {
-			return strings.Replace(match, word, strings.ToUpper(word), 1)
-		}
+			words[len(words)-1] = strings.ToUpper(words[len(words)-1])
+		} else {
+			num, err := strconv.Atoi(count)
+			if err != nil {
+				return match
+			}
 
-		num, err := strconv.Atoi(count)
-		if err != nil {
-			return match
-		}
-
-		words := strings.Fields(text)
-		updatedWords := make([]string, len(words))
-		copy(updatedWords, words)
-		var modifiedCount int
-		for i := 0; i < len(updatedWords); i++ {
-			if updatedWords[i] == word {
-				updatedWords[i] = strings.ToUpper(updatedWords[i])
-				modifiedCount++
-				if modifiedCount == num {
-					break
-				}
+			for i := len(words) - 1; i >= 0 && num > 0; i-- {
+				words[i] = strings.ToUpper(words[i])
+				num--
 			}
 		}
 
-		return strings.Join(updatedWords, " ")
+		return strings.Join(words, " ")
 	})
 }
 
 func convertToLowercase(text string) string {
-	re := regexp.MustCompile(`(\w+) \(low(?:, (\d+))?\)`)
+	re := regexp.MustCompile(`((?:\w+ ){0,}\w+) \(low(?:, (\d+))?\)`)
 	return re.ReplaceAllStringFunc(text, func(match string) string {
 		submatches := re.FindStringSubmatch(match)
-		word := submatches[1]
+		wordsMatch := submatches[1]
 		count := submatches[2]
 
+		words := strings.Fields(wordsMatch)
+
 		if count == "" {
-			return strings.Replace(match, word, strings.ToLower(word), 1)
-		}
+			words[len(words)-1] = strings.ToLower(words[len(words)-1])
+		} else {
+			num, err := strconv.Atoi(count)
+			if err != nil {
+				return match
+			}
 
-		num, err := strconv.Atoi(count)
-		if err != nil {
-			return match
-		}
-
-		words := strings.Fields(text)
-		updatedWords := make([]string, len(words))
-		copy(updatedWords, words)
-		var modifiedCount int
-		for i := 0; i < len(updatedWords); i++ {
-			if updatedWords[i] == word {
-				updatedWords[i] = strings.ToLower(updatedWords[i])
-				modifiedCount++
-				if modifiedCount == num {
-					break
-				}
+			for i := len(words) - 1; i >= 0 && num > 0; i-- {
+				words[i] = strings.ToLower(words[i])
+				num--
 			}
 		}
 
-		return strings.Join(updatedWords, " ")
+		return strings.Join(words, " ")
 	})
 }
 
 func convertToCapitalized(text string) string {
-	re := regexp.MustCompile(`(\w+) \(cap(?:, (\d+))?\)`)
+	re := regexp.MustCompile(`((?:\w+ ){0,}\w+) \(cap(?:, (\d+))?\)`)
 	return re.ReplaceAllStringFunc(text, func(match string) string {
 		submatches := re.FindStringSubmatch(match)
-		word := submatches[1]
+		wordsMatch := submatches[1]
 		count := submatches[2]
 
+		words := strings.Fields(wordsMatch)
+
 		if count == "" {
-			return strings.Replace(match, word, strings.Title(word), 1)
-		}
+			words[len(words)-1] = strings.Title(words[len(words)-1])
+		} else {
+			num, err := strconv.Atoi(count)
+			if err != nil {
+				return match
+			}
 
-		num, err := strconv.Atoi(count)
-		if err != nil {
-			return match
-		}
-
-		words := strings.Fields(text)
-		updatedWords := make([]string, len(words))
-		copy(updatedWords, words)
-		var modifiedCount int
-		for i := 0; i < len(updatedWords); i++ {
-			if updatedWords[i] == word {
-				updatedWords[i] = strings.Title(updatedWords[i])
-				modifiedCount++
-				if modifiedCount == num {
-					break
-				}
+			for i := len(words) - 1; i >= 0 && num > 0; i-- {
+				words[i] = strings.Title(words[i])
+				num--
 			}
 		}
 
-		return strings.Join(updatedWords, " ")
+		return strings.Join(words, " ")
 	})
 }
 
-func formatPunctuations(text string) string {
-	re := regexp.MustCompile(`(\w+)(?:\s*([.,!?;:]))(\s+|$)`)
-	return re.ReplaceAllString(text, "$1$2 ")
+func formatPunctuation(text string) string {
+	// Create a map to quickly look up whether a character is punctuation
+	punctuationMap := map[rune]bool{
+		'.': true,
+		',': true,
+		'!': true,
+		'?': true,
+		':': true,
+		';': true,
+	}
+
+	runes := []rune(text)
+	n := len(runes)
+
+	// Start by creating a buffer to build the formatted text
+	var buffer bytes.Buffer
+	buffer.Grow(n) // Pre-allocate the required space
+
+	i := 0
+	for i < n {
+		r := runes[i]
+
+		if punctuationMap[r] {
+			// Special handling for '...'
+			if r == '.' && i+2 < n && runes[i+1] == '.' && runes[i+2] == '.' {
+				buffer.WriteRune(runes[i])
+				buffer.WriteRune(runes[i+1])
+				buffer.WriteRune(runes[i+2])
+				i += 3
+				continue
+			}
+
+			// Check if the character before the punctuation is a space and remove it
+			if i > 0 && runes[i-1] == ' ' {
+				buffer.Truncate(buffer.Len() - 1)
+			}
+
+			// Write the punctuation to the buffer
+			buffer.WriteRune(r)
+
+			// Skip the space after the punctuation
+			if i+1 < n && runes[i+1] == ' ' {
+				i++
+			}
+		} else {
+			buffer.WriteRune(r)
+		}
+
+		i++
+	}
+
+	return buffer.String()
 }
 
 func formatQuotationMarks(text string) string {
-	re := regexp.MustCompile(`(\w+)\s+'([^']+)'\s+(\w+)`)
-	return re.ReplaceAllString(text, "$1 '$2' $3")
+	re := regexp.MustCompile(`'([^']*)'`)
+	return re.ReplaceAllString(text, "'$1'")
 }
 
 func replaceAToAn(text string) string {
