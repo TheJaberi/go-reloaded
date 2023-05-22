@@ -16,7 +16,6 @@ func HexatoDec(HextoDec string) string {
             var err error
             output, err = strconv.ParseInt(number, 16, 64)
             if err != nil {
-                // return an empty string in case of an error
                 return ""
             }
             words[i-1] = strconv.FormatInt(output, 10)

@@ -1,20 +1,17 @@
 package reloaded
 
 import (
-    "strings"
+    "regexp"
 )
 
-func FormatPunctuation(s string) string {
-    x := strings.Fields(s)
-    punctuations := ".,:;!?"
-    for i, word := range x {
-        if strings.ContainsAny(word, punctuations) {
-            x[i-1] = x[i-1] + word
-      x[i] = ""
-        }
-    }
+func FormatPunctuation(str string) string {
+    // Remove unwanted spaces before punctuations
+    re := regexp.MustCompile(`\s*([.,:;])\s*`)
+    str = re.ReplaceAllString(str, "$1 ")
 
-  y := strings.Join(x, " ")
-  z := strings.Fields(y)
-    return strings.Join(z, " ")
+    // Handle exclamations and questions
+    reExclQuest := regexp.MustCompile(`\s*([!?])\s*`)
+    str = reExclQuest.ReplaceAllString(str, "$1")
+
+    return str
 }

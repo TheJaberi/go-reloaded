@@ -24,7 +24,10 @@ func main() {
 	modifiedText := reloaded.Atoan(string(text))
 	modifiedText = reloaded.HexatoDec(modifiedText)
 	modifiedText = reloaded.BintoDec(modifiedText)
+	modifiedText = reloaded.Capitalize(modifiedText)
+	modifiedText = reloaded.ToUpper(modifiedText)
 	modifiedText = reloaded.FormatPunctuation(modifiedText)
+
 
 	err = os.WriteFile(outputFile, []byte(modifiedText), 0644)
 	if err != nil {
