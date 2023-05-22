@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
-	"test"
+	"reloaded"
 )
 
 func main() {
@@ -21,20 +21,12 @@ func main() {
 		return
 	}
 
-	modifiedText := test.Atoan(text)
+	modifiedText := reloaded.Atoan(string(text))
+	modifiedText = reloaded.HexatoDec(modifiedText)
+	modifiedText = reloaded.BintoDec(modifiedText)
+	modifiedText = reloaded.FormatPunctuation(modifiedText)
 
-
-
-
-
-
-
-
-
-
-
-
-	err = os.WriteFile(outputFile, modifiedText, 0644)
+	err = os.WriteFile(outputFile, []byte(modifiedText), 0644)
 	if err != nil {
 		fmt.Printf("Error writing to output file: %v\n", err)
 		return
