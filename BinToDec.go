@@ -3,6 +3,7 @@ package reloaded
 import (
 	"strconv"
 	"strings"
+    "fmt"
 )
 
 func BintoDec(Binstring string) string {
@@ -16,6 +17,7 @@ func BintoDec(Binstring string) string {
             var err error
             output, err = strconv.ParseInt(number, 2, 64)
             if err != nil {
+                fmt.Print(err)
                 // return an empty string in case of an error
                 return ""
             }

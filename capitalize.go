@@ -9,7 +9,7 @@ func Capitalize(input string) string {
 	words := strings.Fields(input)
 	for i := 1; i < len(words); i++ {
 		if containsSubstring(words[i], capPattern){
-			words[i-1] = strings.Title(words[i-1])
+			words[i-1] = strings.Title(strings.ToLower(words[i-1]))
 		}
 	}
 	marker := strings.Join(words, " ")

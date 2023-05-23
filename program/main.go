@@ -26,7 +26,9 @@ func main() {
 	modifiedText = reloaded.BintoDec(modifiedText)
 	modifiedText = reloaded.Capitalize(modifiedText)
 	modifiedText = reloaded.ToUpper(modifiedText)
+	modifiedText = reloaded.MarkerWithNumber(modifiedText)
 	modifiedText = reloaded.FormatPunctuation(modifiedText)
+	modifiedText = reloaded.BetterPunctuation(modifiedText)
 
 
 	err = os.WriteFile(outputFile, []byte(modifiedText), 0644)
