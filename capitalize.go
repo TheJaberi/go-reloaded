@@ -8,7 +8,7 @@ func Capitalize(input string) string {
 	capPattern := "(cap)"
 	words := strings.Fields(input)
 	for i := 1; i < len(words); i++ {
-		if containsSubstring(words[i], capPattern){
+		if containsSubstring(words[i], capPattern) {
 			words[i-1] = strings.Title(strings.ToLower(words[i-1]))
 		}
 	}
@@ -17,4 +17,3 @@ func Capitalize(input string) string {
 	nomarker := strings.Fields(converted)
 	return strings.Join(nomarker, " ")
 }
-

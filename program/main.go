@@ -20,6 +20,20 @@ func main() {
 		fmt.Printf("Error reading input file: %v\n", err)
 		return
 	}
+	var isEmpty bool
+	var cases int
+	isEmpty, cases = reloaded.CheckIfEmpty(string(text))
+
+	if isEmpty {
+		if cases == 1 {
+			fmt.Println("you have an empty string in the input file, write some words 0_o")
+		} else if cases == 2 {
+			fmt.Println("you just have whitespaces in your input, write some words 0_o")
+		} else {
+			fmt.Println("you should check if your input is valid")
+		}
+		os.Exit(0)
+	}
 
 	modifiedText := reloaded.Atoan(string(text))
 	modifiedText = reloaded.HexatoDec(modifiedText)
@@ -29,7 +43,6 @@ func main() {
 	modifiedText = reloaded.MarkerWithNumber(modifiedText)
 	modifiedText = reloaded.FormatPunctuation(modifiedText)
 	modifiedText = reloaded.BetterPunctuation(modifiedText)
-
 
 	err = os.WriteFile(outputFile, []byte(modifiedText), 0644)
 	if err != nil {
