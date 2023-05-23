@@ -33,7 +33,9 @@ func MarkerWithNumber(input string) string {
             }
         }
     }
-    return strings.Join(words, " ")
+    temp := strings.Join(words, " ")
+    temp2 := strings.Fields(temp)
+    return strings.Join(temp2, " ")
 }
 
 
