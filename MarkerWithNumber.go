@@ -15,7 +15,7 @@ func MarkerWithNumber(input string) string {
 	noComma := regexp.MustCompile(`\((low|up|cap),\d+\)`)
 	noBoth := regexp.MustCompile(`\((low|up|cap)`)
 	for i := 0; i < len(words); i++ {
-		if noSpace.MatchString(words[i]) || noComma.MatchString(words[i]) || noBoth.MatchString(words[i]) {
+		if noSpace.MatchString(words[i]) || noComma.MatchString(words[i]) || noBoth.MatchString(words[i]) && !containsSubstring(words[i], ","){
 			fmt.Println("you have an Invalid marker. A marker should contain both a comma and a space.")
 			os.Exit(0)
 		}

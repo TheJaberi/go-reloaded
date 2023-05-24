@@ -29,8 +29,6 @@ func main() {
 			fmt.Println("you have an empty string in the input file, write some words 0_o")
 		} else if cases == 2 {
 			fmt.Println("you just have whitespaces in your input, write some words 0_o")
-		} else {
-			fmt.Println("you should check if your input is valid")
 		}
 		os.Exit(0)
 	}
