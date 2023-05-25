@@ -44,13 +44,14 @@ func MarkerWithNumber(input string) string {
 					words[i] = ""
 					words = append(words[:i], words[i+1:]...)
 					i -= number // step back since we removed an element
+					temp := strings.Join(words, " ")
+					words = strings.Fields(temp)
 				}
 			}
 		}
 	}
-	temp := strings.Join(words, " ")
-	temp2 := strings.Fields(temp)
-	return strings.Join(temp2, " ")
+	
+	return strings.Join(words, " ")
 
 }
 

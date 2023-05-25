@@ -7,7 +7,7 @@ import (
 )
 
 func main() {
-	if len(os.Args) < 3 {
+	if len(os.Args) != 3 {
 		fmt.Println("Usage: go run main.go <input_file> <output_file>")
 		return
 	}
@@ -38,6 +38,7 @@ func main() {
 	modifiedText = reloaded.BintoDec(modifiedText)
 	modifiedText = reloaded.Capitalize(modifiedText)
 	modifiedText = reloaded.ToUpper(modifiedText)
+	modifiedText = reloaded.ToLower(modifiedText)
 	modifiedText = reloaded.MarkerWithNumber(modifiedText)
 	modifiedText = reloaded.FormatPunctuation(modifiedText)
 	modifiedText = reloaded.BetterPunctuation(modifiedText)
@@ -48,5 +49,5 @@ func main() {
 		return
 	}
 
-	fmt.Println("Text processing complete. " + string(modifiedText))
+	fmt.Println("Text processing complete. " + modifiedText)
 }

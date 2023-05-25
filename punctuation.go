@@ -6,16 +6,14 @@ import (
 
 func FormatPunctuation(str string) string {
 	// Remove unwanted spaces before punctuations
-	re := regexp.MustCompile(`\s*([.,:;])\s*`)
-	str = re.ReplaceAllString(str, "$1 ")
+	space := regexp.MustCompile(`\s*([.,:;?!])`)
+	str = space.ReplaceAllString(str, "$1")
 
-	// Handle exclamations and questions
-	reExclQuest := regexp.MustCompile(`\s*([!?])\s*`)
-	str = reExclQuest.ReplaceAllString(str, "$1")
+	// Regular expression to match a punctuation excluding ellipsis, apostrophe and single quote, followed by a letter
+	addspace := regexp.MustCompile(`([^'][.,:;?!])([[:alpha:]])`)
 
-	// Handle ellipsis separately
-	reEllipsis := regexp.MustCompile(`\s*\.\s*\.\s*\.\s*`)
-	str = reEllipsis.ReplaceAllString(str, "... ")
+	// Replace matched patterns with the addition of a space
+	str = addspace.ReplaceAllString(str, "$1 $2")
 
 	return str
 }

@@ -1,24 +1,26 @@
 package reloaded
 
 import (
-	"fmt"
+	"regexp"
 	"strings"
 )
 
 func BetterPunctuation(input string) string {
-	parts := strings.Split(input, "'")
-	quoteCount := 0
+	re := regexp.MustCompile(`'([^']*)'`)
+	matches := re.FindAllStringSubmatch(input, -1)
 
-	for i := 1; i < len(parts)-1; i += 2 {
-		field := strings.Split(parts[i], "\\s+")
+	quoteCount := 0
+	for _, match := range matches {
+		quoted := match[0]
+		insideQuotes := match[1]
+
+		field := strings.Split(insideQuotes, " ")
 
 		// Join words with a space and trim spaces
-		parts[i] = "'" + strings.TrimSpace(strings.Join(field, " ")) + "'"
+		newQuoted := "'" + strings.TrimSpace(strings.Join(field, " ")) + "'"
+		input = strings.Replace(input, quoted, newQuoted, 1)
 		quoteCount++
 	}
-	if quoteCount%2 == 1 {
-		fmt.Println("you have an odd number of single quotes, last single quote removed")
-	}
 
-	return strings.Join(parts, "")
+	return input
 }
