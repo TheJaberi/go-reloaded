@@ -41,6 +41,7 @@ func main() {
 
 	// Perform various modifications on the input text
 	modifiedText := reloaded.Atoan(string(text))
+	modifiedText = reloaded.NormalizeArabicQuotes(modifiedText)
 	modifiedText = reloaded.HexatoDec(modifiedText)
 	modifiedText = reloaded.BintoDec(modifiedText)
 	modifiedText = reloaded.Capitalize(modifiedText)
@@ -56,4 +57,5 @@ func main() {
 		fmt.Printf("Error writing to output file: %v\n", err)
 		return
 	}
+	fmt.Print(modifiedText)
 }
